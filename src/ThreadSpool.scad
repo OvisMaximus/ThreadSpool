@@ -4,6 +4,8 @@ lWall = 2.6;
 hSpool = 62;
 hIntersect = 5;
 dSixEdgeKey = 7.5;
+lThreadLock = 5;
+wThreadLock = 2;
 
 module endOfConfigsNop() {}
 
@@ -15,6 +17,15 @@ hHalfSpool = (hSpool + hIntersect) / 2;
 lGap = 0.06;
 
 
+module wedge(wSmall, wLarge, length, height) {
+    linear_extrude(height)
+        polygon([
+            [0,wSmall/2], 
+            [length, wLarge/2], 
+            [length, wLarge/-2], 
+            [0,wSmall/-2]
+        ]);
+}
 
 module baseBody() {
     cylinder(lWall, r = rBlades);
@@ -28,6 +39,8 @@ module body() {
             cylinder(hHalfSpool + 2 * cadFix, r = rHollowCenter);
         translate([rHollowCenter, 0, 0])
             sphere(5);
+        translate([rBlades - lThreadLock, 0, -cadFix])
+            wedge(wThreadLock * .7, wThreadLock * 1.1, lThreadLock, lWall + 2 * cadFix);
     }
 }
 
@@ -59,13 +72,14 @@ module windingAdapter() {
     }
 }
 
-//bodyWithInnerIntersect();
-//bodyWithOuterIntersect();
-windingAdapter();
-
 module paintBodyWithOuterIntersectForTotal() {
-    color("red")
+    color("red", alpha = 0.5)
         translate([0, 0, hSpool + cadFix])
             rotate([180, 0, 0])
                 bodyWithOuterIntersect();
 }
+
+bodyWithInnerIntersect();
+//bodyWithOuterIntersect();
+//paintBodyWithOuterIntersectForTotal();
+//windingAdapter();
