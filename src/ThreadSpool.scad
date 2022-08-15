@@ -51,7 +51,7 @@ module bodyWithInnerIntersect() {
 
 module windingAdapter() {
     difference() {
-        cylinder(hSpool, r1 = rHollowCenter + lGap, r2 = rHollowCenter - 2 * lGap);
+        cylinder(hSpool, r1 = rHollowCenter + 3 * lGap, r2 = rHollowCenter - 3 * lGap);
         translate([0,0,-cadFix])
             cylinder(hSpool + 2*cadFix, d=7.2, $fn=6);
     }
