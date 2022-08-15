@@ -3,6 +3,7 @@ rBlades = 35;
 lWall = 2.6;
 hSpool = 62;
 hIntersect = 5;
+dSixEdgeKey = 7.5;
 
 module endOfConfigsNop() {}
 
@@ -53,7 +54,7 @@ module windingAdapter() {
     difference() {
         cylinder(hSpool, r1 = rHollowCenter + 3 * lGap, r2 = rHollowCenter - 3 * lGap);
         translate([0,0,-cadFix])
-            cylinder(hSpool + 2*cadFix, d=7.2, $fn=6);
+            cylinder(hSpool + 2*cadFix, d=dSixEdgeKey, $fn=6);
     }
 }
 
