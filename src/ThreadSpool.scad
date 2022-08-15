@@ -51,10 +51,11 @@ module bodyWithInnerIntersect() {
 }
 
 module windingAdapter() {
+    hWindingAdapter = hSpool / 2;
     difference() {
-        cylinder(hSpool, r1 = rHollowCenter + 3 * lGap, r2 = rHollowCenter - 3 * lGap);
+        cylinder(hWindingAdapter, r1 = rHollowCenter + 3 * lGap, r2 = rHollowCenter - 3 * lGap);
         translate([0,0,-cadFix])
-            cylinder(hSpool + 2*cadFix, d=dSixEdgeKey, $fn=6);
+            cylinder(hWindingAdapter + 2*cadFix, d=dSixEdgeKey, $fn=6);
     }
 }
 
