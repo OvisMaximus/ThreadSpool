@@ -3,13 +3,15 @@ rBlades = 35;
 lWall = 2.6;
 hSpool = 62;
 hIntersect = 5;
-dSixEdgeKey = 7.5;
+dSixEdgeKey = 7.45;
 lThreadLock = 5;
 wThreadLock = 2;
 
+which_part = 0; //[0: Spool part 1, 1: Spool part 2, 2: Complete Spool as overview, 3: winding adapter]
+
 module endOfConfigsNop() {}
 
-cadFix = 0.005;
+cadFix = 0.05;
 $fn = 250;
 
 rCenter = rHollowCenter + lWall;
@@ -63,12 +65,31 @@ module bodyWithInnerIntersect() {
     }
 }
 
+module testNut() {
+    hWindingAdapter = 4;
+    difference() {
+        cylinder(hWindingAdapter, r = 4.5);
+        translate([0,0,-cadFix])
+            cylinder(hWindingAdapter + 2*cadFix, d=dSixEdgeKey, $fn=6);
+    }
+}
+
 module windingAdapter() {
     hWindingAdapter = hSpool / 2;
+    lSpeiche = 5;
     difference() {
         cylinder(hWindingAdapter, r1 = rHollowCenter + 3 * lGap, r2 = rHollowCenter - 3 * lGap);
         translate([0,0,-cadFix])
             cylinder(hWindingAdapter + 2*cadFix, d=dSixEdgeKey, $fn=6);
+        for(i = [30:60:360]) {
+            rotate([0,0,i]) {
+                translate([rHollowCenter - lWall - lSpeiche, 0, - cadFix])
+                    wedge(4, 9, lSpeiche, hWindingAdapter + 2 * cadFix);
+                translate([rHollowCenter - lWall * .65 , 0, - cadFix])
+                    rotate([0,0,180])
+                        wedge(4, 9, 1, hWindingAdapter + 2 * cadFix);
+            }
+        }
     }
 }
 
@@ -79,7 +100,17 @@ module paintBodyWithOuterIntersectForTotal() {
                 bodyWithOuterIntersect();
 }
 
-bodyWithInnerIntersect();
-//bodyWithOuterIntersect();
-//paintBodyWithOuterIntersectForTotal();
-//windingAdapter();
+if(which_part==0) {
+    bodyWithInnerIntersect();
+} else if(which_part==1) {
+    bodyWithOuterIntersect();
+} else if(which_part==2) {
+    bodyWithInnerIntersect();
+    paintBodyWithOuterIntersectForTotal();
+} else {
+    windingAdapter();
+}
+
+
+
+
